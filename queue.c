@@ -145,7 +145,7 @@ void destroyQueue(void){
   while (curr) {
         next = curr->next;
         cnd_destroy(&curr->condition);
-        free(curr);        // free threads
+        free(curr);        // free thread
         curr = next;
   }
 
@@ -159,12 +159,6 @@ void destroyQueue(void){
   global_queue.waiting_tail = NULL;
 
 }
-
-
-
-
-
-
 
 
 size_t visited(void) {
