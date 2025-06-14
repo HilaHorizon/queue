@@ -89,7 +89,7 @@ void* dequeue(void) {
 
         // Add to tail of waiting threads list (FIFO order)
         if (global_queue.waiting_tail == NULL) {
-            global_queue.waiting_tail = my_wait;
+            global_queue.waiting_tail = new_waiting_thread;
             global_queue.waiting_head = global_queue.waiting_tail;
         } else {
             global_queue.waiting_tail->next = new_waiting_thread;
@@ -101,7 +101,7 @@ void* dequeue(void) {
           cnd_wait(&new_waiting_thread->condition, &global_queue.queue_mutex);
         }
 
-        cnd_destroy(&new_waiting_thread->conditio);
+        cnd_destroy(&new_waiting_thread->condition);
         free(new_waiting_thread);
         
         // After waking up, check again for items (loop will exit if item available)
@@ -130,8 +130,8 @@ void* dequeue(void) {
 
 void destroyQueue(void){
 
-  queue_node_t curr = global_queue.head;
-  queue_node_t next;
+  queue_node_t* curr = global_queue.head;
+  queue_node_t* next;
 
   while (curr) {
         next = curr->next;
@@ -139,14 +139,14 @@ void destroyQueue(void){
         curr = next;
   }
 
-  waiting_thread_t curr = waiting_head;
-  waiting_thread_t next;
+  waiting_thread_t* curr_thread = global_queue.waiting_head;
+  waiting_thread_t* next_thread;
 
   while (curr) {
-        next = curr->next;
-        cnd_destroy(&curr->condition);
-        free(curr);        // free thread
-        curr = next;
+        next_thread = curr_thread->next;
+        cnd_destroy(&curr_thread->condition);
+        free(curr_thread);        // free thread
+        curr_thread = next_thread;
   }
 
   // Destroy the mutex
