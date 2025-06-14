@@ -56,7 +56,7 @@ void enqueue(void* item) {
     
     // Add to tail of queue
     global_queue.tail->next = new_node;
-    global_queue.tail = global_queue.tail->next;
+    global_queue.tail = new_node;
     
     // Wake up the oldest waiting thread if any exist
     if (global_queue.waiting_head != NULL) {
@@ -93,7 +93,7 @@ void* dequeue(void) {
             global_queue.waiting_head = global_queue.waiting_tail;
         } else {
             global_queue.waiting_tail->next = new_waiting_thread;
-            global_queue.waiting_tail = global_queue.waiting_tail->next;
+            global_queue.waiting_tail = new_waiting_thread;
         }         
         
         // wait until enqueue happens and we can dequeue
