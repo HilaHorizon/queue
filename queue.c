@@ -142,7 +142,7 @@ void destroyQueue(void){
   waiting_thread_t* curr_thread = global_queue.waiting_head;
   waiting_thread_t* next_thread;
 
-  while (curr) {
+  while (curr_thread) {
         next_thread = curr_thread->next;
         cnd_destroy(&curr_thread->condition);
         free(curr_thread);        // free thread
